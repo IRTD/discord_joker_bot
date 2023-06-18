@@ -1,0 +1,4 @@
+quote_file_path = "./joker_quote.txt"
+
+[discord_client]
+token = "The token"

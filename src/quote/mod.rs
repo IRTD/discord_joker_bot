@@ -2,6 +2,11 @@ pub mod quote_error;
 
 use crate::quote::quote_error::QuoteError;
 
+use anyhow::Result;
+use rand::Rng;
+use std::fs::read_to_string;
+use std::path::PathBuf;
+
 #[derive(Debug)]
 pub struct Quote {
     pub quote: String,
@@ -37,5 +42,29 @@ fn clean_raw_quote(quote: String) -> String {
 impl Quote {
     pub fn quote(&self) -> String {
         format!("{:?} - {}", self.quote, self.name)
+    }
+}
+
+pub struct QuoteStack {
+    quotes: Vec<Quote>,
+}
+
+impl QuoteStack {
+    pub fn from_file<S: Into<PathBuf>>(file: S) -> Result<Self> {
+        let content = read_to_string(file.into())?;
+        let mut quotes = Vec::new();
+        for line in content.split("\n") {
+            if let Ok(q) = Quote::try_from(line.to_string()) {
+                quotes.push(q);
+            }
+        }
+
+        Ok(QuoteStack { quotes })
+    }
+
+    pub fn rand_quote(&self) -> &Quote {
+        let mut rng = rand::thread_rng();
+        let n = rng.gen_range(0..self.quotes.len());
+        &self.quotes[n]
     }
 }
