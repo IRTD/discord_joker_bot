@@ -1,4 +1,4 @@
 quote_file_path = "./joker_quote.txt"
 
 [discord_client]
-token = "MTExNjU2NjE3ODE1NzA1MjA0NA.G1w-Or.S4QrDP46M24uZ5LMrIBVRGt52TVWni44lT_-6k"
+token = "<Your Token>"
