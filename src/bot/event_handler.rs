@@ -49,10 +49,9 @@ impl EventHandler for Handler {
 
 impl Handler {
     pub fn new(stack_ref: QuoteStack) -> Handler {
-        let mcip_bytes = Command::new("curl -4 ifconfig.me")
-            .spawn()
-            .unwrap()
-            .wait_with_output()
+        let mcip_bytes = Command::new("curl")
+            .args(["-4", "ifconfig.me"])
+            .output()
             .unwrap()
             .stdout;
         let mcip = String::from_utf8(mcip_bytes).unwrap();
