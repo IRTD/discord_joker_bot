@@ -21,7 +21,7 @@ impl EventHandler for Handler {
             "!mcip" => {
                 match msg
                     .channel_id
-                    .say(&ctx, self.mcip)
+                    .say(&ctx, self.mcip.clone())
                     .await
                 {
                     Ok(_) => log::warn!("Responded"),
