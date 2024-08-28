@@ -1,3 +1,5 @@
+use std::process::Command;
+
 use crate::quote::QuoteStack;
 
 use serenity::{
@@ -8,6 +10,7 @@ use serenity::{
 
 pub struct Handler {
     stack_ref: QuoteStack,
+    mcip: String,
 }
 
 #[serenity::async_trait]
@@ -26,13 +29,9 @@ impl EventHandler for Handler {
                 }
             },
             "!mcip" => {
-                let ip = match std::env::var("MCIP") {
-                    Ok(i) => i,
-                    Err(_) => String::from("IP Not set lol"),
-                };
                 match msg
                     .channel_id
-                    .say(&ctx, ip)
+                    .say(&ctx, &self.mcip)
                     .await
                 {
                     Ok(_) => log::warn!("Responded"),
@@ -50,6 +49,13 @@ impl EventHandler for Handler {
 
 impl Handler {
     pub fn new(stack_ref: QuoteStack) -> Handler {
-        Handler { stack_ref }
+        let mcip_bytes = Command::new("curl -4 ifconfig.me")
+            .spawn()
+            .unwrap()
+            .wait_with_output()
+            .unwrap()
+            .stdout;
+        let mcip = String::from_utf8(mcip_bytes).unwrap();
+        Handler { stack_ref, mcip }
     }
 }
