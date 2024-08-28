@@ -18,6 +18,16 @@ impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
         log::warn!("Read new message: {}", msg.content);
         match msg.content.as_str() {
+            "!mcip" => {
+                match msg
+                    .channel_id
+                    .say(&ctx, self.mcip)
+                    .await
+                {
+                    Ok(_) => log::warn!("Responded"),
+                    Err(e) => log::error!("EventHandler: {}", e),
+                }
+            },
             "!quote" => {
                 match msg
                     .channel_id
@@ -28,16 +38,6 @@ impl EventHandler for Handler {
                     Err(e) => log::error!("EventHandler: {}", e),
                 }
             },
-            "!mcip" => {
-                match msg
-                    .channel_id
-                    .say(&ctx, &self.mcip)
-                    .await
-                {
-                    Ok(_) => log::warn!("Responded"),
-                    Err(e) => log::error!("EventHandler: {}", e),
-                }
-            }
             _ => {}
         }
     }
