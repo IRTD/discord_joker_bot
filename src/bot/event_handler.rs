@@ -26,9 +26,9 @@ impl EventHandler for Handler {
                 }
             },
             "!mcip" => {
-                let ip = match public_ip::addr_v4().await {
-                    Some(ip) => format!("{:?}", ip),
-                    None => String::from("Uh idk no IP lol"),
+                let ip = match std::env::var("MCIP") {
+                    Ok(i) => i,
+                    Err(_) => String::from("IP Not set lol"),
                 };
                 match msg
                     .channel_id
